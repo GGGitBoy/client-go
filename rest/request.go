@@ -828,6 +828,9 @@ func (r *Request) Do() Result {
 	err := r.request(func(req *http.Request, resp *http.Response) {
 		result = r.transformResponse(resp, req)
 	})
+
+	fmt.Println("jiandao === 55555")
+
 	if err != nil {
 		return Result{err: err}
 	}
@@ -884,6 +887,9 @@ func (r *Request) transformResponse(resp *http.Response, req *http.Request) Resu
 		}
 	}
 
+	str := string(body)
+
+	fmt.Println("jiandao == " + str)
 	glogBody("Response Body", body)
 
 	// verify the content type is accurate
@@ -911,6 +917,8 @@ func (r *Request) transformResponse(resp *http.Response, req *http.Request) Resu
 		}
 	}
 
+	fmt.Println("jiandao == 1111")
+
 	switch {
 	case resp.StatusCode == http.StatusSwitchingProtocols:
 		// no-op, we've been upgraded
@@ -927,6 +935,8 @@ func (r *Request) transformResponse(resp *http.Response, req *http.Request) Resu
 			err:         err,
 		}
 	}
+
+	fmt.Println("jiandao == 22222")
 
 	return Result{
 		body:        body,
@@ -1092,11 +1102,15 @@ func (r Result) Get() (runtime.Object, error) {
 		return nil, fmt.Errorf("serializer for %s doesn't exist", r.contentType)
 	}
 
+	fmt.Println("jiandao ==== 88888")
+	fmt.Printf("%+v\n", r.body)
 	// decode, but if the result is Status return that as an error instead.
 	out, _, err := r.decoder.Decode(r.body, nil, nil)
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("jiandao ==== 99999")
 	switch t := out.(type) {
 	case *metav1.Status:
 		// any status besides StatusSuccess is considered an error.
